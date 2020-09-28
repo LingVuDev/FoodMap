@@ -14,7 +14,7 @@ app.use(express.json());
 app.get(prefix + '/restaurants', (req, res) => {
     db.query('SELECT * FROM restaurants;').then((results) => {
         console.log(results);
-        res.json({ 
+        res.status(200).json({ 
             status: 'success',
             results: results.rows.length,
             data: {
@@ -32,7 +32,7 @@ app.get(prefix + '/restaurants', (req, res) => {
 // Get a restaurant
 app.get(prefix + '/restaurants/:id', (req, res) => {
     db.query('SELECT * FROM restaurants WHERE id = $1', [req.params.id]).then((results) => {
-        res.json({ 
+        res.status(200).json({ 
             status: 'success',
             data: {
                 restaurant: results.rows[0],
@@ -48,13 +48,21 @@ app.get(prefix + '/restaurants/:id', (req, res) => {
 
 // Create a restaurant
 app.post(prefix + '/restaurants', (req, res) => {
-    console.log(req.body);
-
-    res.status(201).json({
-        status: 'success',
-        data: {
-            restaurant: "McDonalds",
-        },
+    const { name, location, price_range} = req.body;
+    db.query('INSERT INTO restaurants (name, location, price_range) VALUES ($1,$2,$3)', [name, location, price_range]).then(() => {
+        return db.query('SELECT * FROM restaurants');
+    }).then((results) => {
+        res.status(201).json({ 
+            status: 'success',
+            data: {
+                restaurants: results.rows,
+            },
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ 
+            status: 'error',
+        });
     });
 });
 
