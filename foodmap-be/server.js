@@ -11,14 +11,21 @@ app.use(morgan('tiny'));
 app.use(express.json());
 
 // Get all restaurants
-app.get(prefix + '/restaurants', async (req, res) => {
-    const results = await db.query('SELECT * FROM restaurants;');
-    console.log(results);
-    res.json({ 
-        status: 'success',
-        data: {
-            restaurants: [],
-        },
+app.get(prefix + '/restaurants', (req, res) => {
+    db.query('SELECT * FROM restaurants;').then((results) => {
+        console.log(results);
+        res.json({ 
+            status: 'success',
+            results: results.rows.length,
+            data: {
+                restaurants: results.rows,
+            },
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ 
+            status: 'error',
+        });
     });
 });
 
