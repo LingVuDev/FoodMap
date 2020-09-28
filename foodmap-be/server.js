@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const db = require('./db');
 
 const app = express();
 const morgan = require('morgan');
@@ -11,11 +12,20 @@ app.use(express.json());
 
 // Get all restaurants
 app.get(prefix + '/restaurants', (req, res) => {
-    res.json({ 
-        status: 'success',
-        data: {
-            restaurants: [],
-        },
+    db.query('SELECT * FROM restaurants;').then((results) => {
+        console.log(results);
+        res.json({ 
+            status: 'success',
+            results: results.rows.length,
+            data: {
+                restaurants: results.rows,
+            },
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ 
+            status: 'error',
+        });
     });
 });
 
