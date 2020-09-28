@@ -31,13 +31,18 @@ app.get(prefix + '/restaurants', (req, res) => {
 
 // Get a restaurant
 app.get(prefix + '/restaurants/:id', (req, res) => {
-    console.log(req.params);
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            restaurant: "McDonalds",
-        },
+    db.query('SELECT * FROM restaurants WHERE id = $1', [req.params.id]).then((results) => {
+        res.json({ 
+            status: 'success',
+            data: {
+                restaurant: results.rows[0],
+            },
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ 
+            status: 'error',
+        });
     });
 });
 
