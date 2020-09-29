@@ -68,13 +68,17 @@ app.post(prefix + '/restaurants', (req, res) => {
 
 // Update restaurants
 app.put(prefix + '/restaurants/:id', (req, res) => {
-    console.log(req.body);
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            restaurant: "McDonalds",
-        },
+    const { name, location, price_range, id} = req.body;
+    db.query('UPDATE restaurants SET name = $1, location = $2, price_range = $3 WHERE ID = $4 RETURNING *;', [name, location, price_range, id]).then((results) => {
+        res.status(200).json({ 
+            status: 'success',
+            data: results.rows[0],
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ 
+            status: 'error',
+        });
     });
 });
 
