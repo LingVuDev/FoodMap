@@ -68,8 +68,8 @@ app.post(prefix + '/restaurants', (req, res) => {
 
 // Update restaurants
 app.put(prefix + '/restaurants/:id', (req, res) => {
-    const { name, location, price_range, id} = req.body;
-    db.query('UPDATE restaurants SET name = $1, location = $2, price_range = $3 WHERE ID = $4 RETURNING *;', [name, location, price_range, id]).then((results) => {
+    const { name, location, price_range } = req.body;
+    db.query('UPDATE restaurants SET name = $1, location = $2, price_range = $3 WHERE ID = $4 RETURNING *;', [name, location, price_range, res.params.id]).then((results) => {
         res.status(200).json({ 
             status: 'success',
             data: results.rows[0],
@@ -85,8 +85,15 @@ app.put(prefix + '/restaurants/:id', (req, res) => {
 // Delete
 
 app.delete(prefix + '/restaurants/:id', (req, res) => {
-    res.status(204).json({
-        status: 'success',
+    db.query('DELETE FROM restaurants WHERE id = $1;', [req.params.id]).then((results) => {
+        res.status(204).json({ 
+            status: 'success',
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ 
+            status: 'error',
+        });
     });
 });
 
