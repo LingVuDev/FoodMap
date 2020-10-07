@@ -21,7 +21,7 @@ export const AddRestaurant = () => {
                             <option value="5">€€€€€</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary">Add</button>
+                    <button className="btn btn-primary">Add</button>
                 </div>
             </form>
         </div>
