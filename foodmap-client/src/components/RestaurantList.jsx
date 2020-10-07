@@ -1,8 +1,17 @@
-import React from 'react'
+import React, {useContext, useEffect} from 'react'
+import RestaurantFinder from '../apis/RestaurantFinder';
+import { RestaurantsContext } from '../context/RestaurantsContext';
 
 export const RestaurantList = () => {
+    const {restaurants, setRestaurants} = useContext(RestaurantsContext);
+    useEffect(() => {
+        RestaurantFinder.get('/').then((response) => {
+            setRestaurants(response.data.data.restaurants);
+        });
+    }, []);
+
     return (
-        <table class="table table-dark">
+        <table className="table table-dark">
             <thead>
                 <tr className="bg-primary">
                     <th scope="col">Restaurant</th>
@@ -15,20 +24,12 @@ export const RestaurantList = () => {
             </thead>
             <tbody>
                 <tr>
-                    <td class="align-middle">McDonalds</td>
-                    <td class="align-middle">New York</td>
-                    <td class="align-middle">€€</td>
-                    <td class="align-middle">Rating</td>
-                    <td class="align-middle"><button class="btn btn-warning">Edit</button></td>
-                    <td class="align-middle"><button className="btn btn-danger">Delete</button></td>
-                </tr>
-                <tr>
-                    <td class="align-middle">McDonalds</td>
-                    <td class="align-middle">New York</td>
-                    <td class="align-middle">€€</td>
-                    <td class="align-middle">Rating</td>
-                    <td class="align-middle"><button class="btn btn-warning">Edit</button></td>
-                    <td class="align-middle"><button className="btn btn-danger">Delete</button></td>
+                    <td className="align-middle">McDonalds</td>
+                    <td className="align-middle">New York</td>
+                    <td className="align-middle">€€</td>
+                    <td className="align-middle">Rating</td>
+                    <td className="align-middle"><button className="btn btn-warning">Edit</button></td>
+                    <td className="align-middle"><button className="btn btn-danger">Delete</button></td>
                 </tr>
             </tbody>
         </table>

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const db = require('./db');
 
 const app = express();
@@ -7,6 +8,7 @@ const morgan = require('morgan');
 const port = process.env.PORT || 3001;
 const prefix = '/api/v1';
 
+app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 
