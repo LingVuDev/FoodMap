@@ -75,8 +75,11 @@ const UpdateRestaurant = () => {
             <option value="5">€€€€€</option>
           </select>
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary mr-2">
           Update
+        </button>
+        <button type="submit" className="btn" onClick={() => history.push('..')}>
+          Cancel
         </button>
       </form>
     </div>

@@ -13,14 +13,24 @@ export const RestaurantList = () => {
     }, [setRestaurants]);
 
     const deleteRestaurant = (id) => {
-        return () => RestaurantFinder.delete(`/${id}`).then((response) => {
-            setRestaurants(response.data.data.restaurants);
-        });
+  
+        return (e) => {
+            e.stopPropagation();
+            RestaurantFinder.delete(`/${id}`).then((response) => {
+                setRestaurants(response.data.data.restaurants);
+            });
+        };
     };
 
     const updateRestaurant = (id) => {
-        return () => history.push(`/restaurants/${id}/update`);
+        return (e) => {
+            e.stopPropagation();
+            history.push(`/restaurants/${id}/update`)};
     }
+
+    const selectRestaurant = (id) => {
+        return () => history.push(`/restaurants/${id}`);
+    };
 
     return (
         <table className="table table-dark">
@@ -37,7 +47,7 @@ export const RestaurantList = () => {
             <tbody>
                 { restaurants && restaurants.map((restaurant) => {
                     return (
-                        <tr key={ restaurant.id }>
+                        <tr key={ restaurant.id } onClick={selectRestaurant(restaurant.id)}>
                             <td className="align-middle">{ restaurant.name }</td>
                             <td className="align-middle">{ restaurant.location }</td>
                             <td className="align-middle">{ '€'.repeat(restaurant.price_range) }</td>
