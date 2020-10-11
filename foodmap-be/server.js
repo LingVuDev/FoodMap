@@ -84,11 +84,16 @@ app.put(prefix + '/restaurants/:id', (req, res) => {
 });
 
 // Delete
-
 app.delete(prefix + '/restaurants/:id', (req, res) => {
-    db.query('DELETE FROM restaurants WHERE id = $1;', [req.params.id]).then((results) => {
-        res.status(204).json({ 
+    db.query('DELETE FROM restaurants WHERE id = $1;', [req.params.id]).then(() => {
+        return db.query('SELECT * FROM restaurants');
+    }).then((results) => {
+        console.log(results);
+        res.status(200).json({ 
             status: 'success',
+            data: {
+                restaurants: results.rows,
+            },
         });
     }).catch((err) => {
         console.log(err);

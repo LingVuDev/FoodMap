@@ -10,6 +10,13 @@ export const RestaurantList = () => {
         });
     }, [setRestaurants]);
 
+    const deleteRestaurant = (id) => {
+        return () => RestaurantFinder.delete(`/${id}`).then((response) => {
+            console.log(response);
+            setRestaurants(response.data.data.restaurants);
+        });
+    };
+
     return (
         <table className="table table-dark">
             <thead>
@@ -31,7 +38,9 @@ export const RestaurantList = () => {
                             <td className="align-middle">{ '€'.repeat(restaurant.price_range) }</td>
                             <td className="align-middle"></td>
                             <td className="align-middle"><button className="btn btn-warning">Edit</button></td>
-                            <td className="align-middle"><button className="btn btn-danger">Delete</button></td>
+                            <td className="align-middle">
+                                <button className="btn btn-danger" onClick={deleteRestaurant(restaurant.id)}>Delete</button>
+                            </td>
                         </tr>
                     );
                 }) }

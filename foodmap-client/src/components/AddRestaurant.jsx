@@ -7,7 +7,7 @@ export const AddRestaurant = () => {
   const [location, setLocation] = useState('');
   const [priceRange, setPriceRange] = useState('');
 
-  const {restaurants, setRestaurants} = useContext(RestaurantsContext);
+  const {setRestaurants} = useContext(RestaurantsContext);
 
   const submit = (event) => {
     event.preventDefault();
