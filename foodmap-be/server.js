@@ -15,7 +15,6 @@ app.use(express.json());
 // Get all restaurants
 app.get(prefix + '/restaurants', (req, res) => {
     db.query('SELECT * FROM restaurants;').then((results) => {
-        console.log(results);
         res.status(200).json({ 
             status: 'success',
             results: results.rows.length,
