@@ -5,6 +5,7 @@ import RestaurantFinder from '../apis/RestaurantFinder';
 import { RestaurantsContext } from '../context/RestaurantsContext';
 import StarRating from '../components/StarRating';
 import Reviews from '../components/Reviews';
+import { AddReview } from '../components/AddReview';
 
 export const DetailPage = () => {
   const { id } = useParams();
@@ -24,6 +25,13 @@ export const DetailPage = () => {
 
   return (
     <div className="mx-4">
+      <button
+        type="submit"
+        className="btn mt-2"
+        onClick={() => history.push('..')}
+      >
+        Back
+      </button>
       <h1 className="text-center">
         {selectedRestaurant && selectedRestaurant.name}
       </h1>
@@ -32,23 +40,17 @@ export const DetailPage = () => {
           Location: {selectedRestaurant && selectedRestaurant.location}
         </div>
         <div className="col text-center">
-          Rating: <StarRating rating={3.1} />
+          <StarRating rating={3.1} />
         </div>
         <div className="col text-center">
-            Price Range: {selectedRestaurant && '€'.repeat(selectedRestaurant.price_range)}
+          Price Range:{' '}
+          {selectedRestaurant && '€'.repeat(selectedRestaurant.price_range)}
         </div>
       </div>
       <div className="mx-3">
         <Reviews />
       </div>
-      
-      <button
-        type="submit"
-        className="btn btn-primary"
-        onClick={() => history.push('..')}
-      >
-        Back
-      </button>
+      <AddReview />
     </div>
   );
 };
