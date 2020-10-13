@@ -32,14 +32,22 @@ app.get(prefix + '/restaurants', (req, res) => {
 
 // Get a restaurant
 app.get(prefix + '/restaurants/:id', (req, res) => {
-    db.query('SELECT * FROM restaurants WHERE id = $1', [req.params.id]).then((results) => {
+    const getRestaurant = db.query('SELECT * FROM restaurants WHERE id = $1', [req.params.id]).then((restaurants) => new Promise((resolve) => {
+        resolve(restaurants.rows[0]);
+    }));
+    const getReviews = db.query('SELECT * FROM reviews WHERE id = $1', [req.params.id]).then((reviews) => new Promise((resolve) => {
+        resolve(reviews.rows);
+    }));
+
+    Promise.all([getRestaurant, getReviews]).then(([restaurant, reviews]) => {
         res.status(200).json({ 
             status: 'success',
             data: {
-                restaurant: results.rows[0],
+                restaurant,
+                reviews,
             },
         });
-    }).catch((err) => {
+    }).then().catch((err) => {
         console.log(err);
         res.status(500).json({ 
             status: 'error',

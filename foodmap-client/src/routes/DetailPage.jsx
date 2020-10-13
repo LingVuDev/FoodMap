@@ -17,7 +17,7 @@ export const DetailPage = () => {
   useEffect(() => {
     RestaurantFinder.get(`/${id}`).then((response) => {
       if (response.data.data.restaurant) {
-        const { restaurant } = response.data.data;
+        const restaurant = response.data.data;
         setSelectedRestaurant(restaurant);
       }
     });
@@ -33,22 +33,35 @@ export const DetailPage = () => {
         Back
       </button>
       <h1 className="text-center">
-        {selectedRestaurant && selectedRestaurant.name}
+        {selectedRestaurant &&
+          selectedRestaurant.restaurant &&
+          selectedRestaurant.restaurant.name}
       </h1>
       <div className="row">
         <div className="col text-center">
-          Location: {selectedRestaurant && selectedRestaurant.location}
+          Location:{' '}
+          {selectedRestaurant &&
+            selectedRestaurant.restaurant &&
+            selectedRestaurant.restaurant.location}
         </div>
         <div className="col text-center">
           <StarRating rating={3.1} />
         </div>
         <div className="col text-center">
           Price Range:{' '}
-          {selectedRestaurant && '€'.repeat(selectedRestaurant.price_range)}
+          {selectedRestaurant &&
+            selectedRestaurant.restaurant &&
+            '€'.repeat(selectedRestaurant.restaurant.price_range)}
         </div>
       </div>
       <div className="mx-3">
-        <Reviews />
+        <Reviews
+          reviews={
+            selectedRestaurant &&
+            selectedRestaurant.restaurant &&
+            selectedRestaurant.restaurant.reviews
+          }
+        />
       </div>
       <AddReview />
     </div>
