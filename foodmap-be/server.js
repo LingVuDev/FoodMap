@@ -35,7 +35,7 @@ app.get(prefix + '/restaurants/:id', (req, res) => {
     const getRestaurant = db.query('SELECT * FROM restaurants WHERE id = $1', [req.params.id]).then((restaurants) => new Promise((resolve) => {
         resolve(restaurants.rows[0]);
     }));
-    const getReviews = db.query('SELECT * FROM reviews WHERE id = $1', [req.params.id]).then((reviews) => new Promise((resolve) => {
+    const getReviews = db.query('SELECT * FROM reviews WHERE restaurant_id = $1', [req.params.id]).then((reviews) => new Promise((resolve) => {
         resolve(reviews.rows);
     }));
 
@@ -47,7 +47,7 @@ app.get(prefix + '/restaurants/:id', (req, res) => {
                 reviews,
             },
         });
-    }).then().catch((err) => {
+    }).catch((err) => {
         console.log(err);
         res.status(500).json({ 
             status: 'error',
@@ -96,11 +96,37 @@ app.delete(prefix + '/restaurants/:id', (req, res) => {
     db.query('DELETE FROM restaurants WHERE id = $1;', [req.params.id]).then(() => {
         return db.query('SELECT * FROM restaurants');
     }).then((results) => {
-        console.log(results);
         res.status(200).json({ 
             status: 'success',
             data: {
                 restaurants: results.rows,
+            },
+        });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ 
+            status: 'error',
+        });
+    });
+});
+
+app.post(prefix + '/restaurants/:id/reviews', (req, res) => {
+    const { name, rating, content} = req.body;
+    db.query('INSERT INTO reviews (restaurant_id, name, rating, content) VALUES ($1,$2,$3, $4)', [req.params.id, name, rating, content]).then(() => {
+        const getRestaurant = db.query('SELECT * FROM restaurants WHERE id = $1', [req.params.id]).then((restaurants) => new Promise((resolve) => {
+            resolve(restaurants.rows[0]);
+        }));
+        const getReviews = db.query('SELECT * FROM reviews WHERE restaurant_id = $1', [req.params.id]).then((reviews) => new Promise((resolve) => {
+            resolve(reviews.rows);
+        }));
+        
+        return Promise.all([getRestaurant, getReviews]);
+    }).then(([restaurant, reviews]) => {
+        res.status(201).json({ 
+            status: 'success',
+            data: {
+                restaurant,
+                reviews,
             },
         });
     }).catch((err) => {

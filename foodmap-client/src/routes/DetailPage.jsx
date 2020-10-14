@@ -13,6 +13,14 @@ export const DetailPage = () => {
   const { selectedRestaurant, setSelectedRestaurant } = useContext(
     RestaurantsContext
   );
+  let average = 0;
+  let numberOfRatings = 0;
+  if (selectedRestaurant && selectedRestaurant.reviews) {
+    average =
+      selectedRestaurant.reviews.reduce((a, b) => a + b.rating, 0) /
+      selectedRestaurant.reviews.length;
+    numberOfRatings = selectedRestaurant.reviews.length;
+  }
 
   useEffect(() => {
     RestaurantFinder.get(`/${id}`).then((response) => {
@@ -45,7 +53,7 @@ export const DetailPage = () => {
             selectedRestaurant.restaurant.location}
         </div>
         <div className="col text-center">
-          <StarRating rating={3.1} />
+          <StarRating rating={average} numberOfRatings={numberOfRatings} />
         </div>
         <div className="col text-center">
           Price Range:{' '}
@@ -54,14 +62,8 @@ export const DetailPage = () => {
             '€'.repeat(selectedRestaurant.restaurant.price_range)}
         </div>
       </div>
-      <div className="mx-3">
-        <Reviews
-          reviews={
-            selectedRestaurant &&
-            selectedRestaurant.restaurant &&
-            selectedRestaurant.restaurant.reviews
-          }
-        />
+      <div className="mx-3 mt-4">
+        <Reviews reviews={selectedRestaurant && selectedRestaurant.reviews} />
       </div>
       <AddReview />
     </div>

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fas from '@fortawesome/free-solid-svg-icons';
 import * as far from '@fortawesome/free-regular-svg-icons';
 
-const StarRating = ({ rating }) => {
+const StarRating = ({ rating, numberOfRatings }) => {
   const stars = [];
   for (let index = 1; index <= 5; index++) {
     if (index <= rating) {
@@ -17,7 +17,7 @@ const StarRating = ({ rating }) => {
 
   return (
     <div>
-      {stars}
+      {stars} {numberOfRatings && `(${numberOfRatings})`}
     </div>
   )
 }
